@@ -4,16 +4,23 @@ const cors = require('cors');
 const morgan = require('morgan');
 const paymentRoutes = require('./routes/payment');
 const transactionRoutes = require('./routes/transaction')
+const bodyParser = require('body-parser')
+const ejs = require('ejs');
+
+
 
 //middleware
 app.use(cors());
 app.use(morgan());
-app.use(express.json());
+//init middleware, body-parser is part of express - this will allow us to get data in user route req.body...etc
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.set('view engine', 'ejs');
 
 //routes
-app.get('/', (req, res)  => res.send('API is running'));
+app.get('/', (req, res) => res.render('index'));
 
-app.use('/', paymentRoutes);
+app.use('/payment', paymentRoutes);
 app.use('/', transactionRoutes);
 
 
