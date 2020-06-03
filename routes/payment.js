@@ -16,27 +16,11 @@ router.post('/', (req, res) => {
     var instance = new cybersourceRestApi.PaymentsApi(configObject);
   
     var clientReferenceInformation = new cybersourceRestApi.Ptsv2paymentsClientReferenceInformation();
-    clientReferenceInformation.code = 'fromMac74';
+    clientReferenceInformation.code = 'fromMac76';
   
     var processingInformation = new cybersourceRestApi.Ptsv2paymentsProcessingInformation();
     processingInformation.commerceIndicator = 'internet';
-  
-    var subMerchant = new cybersourceRestApi.Ptsv2paymentsAggregatorInformationSubMerchant();
-    subMerchant.cardAcceptorId = '1234567890';
-    subMerchant.country = 'US';
-    subMerchant.phoneNumber = '4158880000';
-    subMerchant.address1 = '1 Market St';
-    subMerchant.postalCode = '94105';
-    subMerchant.locality = 'San Francisco';
-    subMerchant.name = 'Visa Inc';
-    subMerchant.administrativeArea = 'CA';
-    subMerchant.region = 'PEN';
-    subMerchant.email = 'test@cybs.com';
-  
-    var aggregatorInformation = new cybersourceRestApi.Ptsv2paymentsAggregatorInformation();
-    aggregatorInformation.subMerchant = subMerchant;
-    aggregatorInformation.name = 'V-Internatio';
-    aggregatorInformation.aggregatorId = '123456789';
+
   
     var amountDetails = new cybersourceRestApi.Ptsv2paymentsOrderInformationAmountDetails();
     amountDetails.totalAmount = '102.21';
@@ -64,18 +48,24 @@ router.post('/', (req, res) => {
     var paymentInformation = new cybersourceRestApi.Ptsv2paymentsPaymentInformation();
     var card = new cybersourceRestApi.Ptsv2paymentsPaymentInformationCard();
     card.expirationYear = '2031';
-    card.number = req.body.number;
+    card.number = req.body.creditCardNumber;
     card.expirationMonth = '03';
     card.securityCode = '123';
     card.type = '001';
     paymentInformation.card = card;
+
+    var consumerAuthenticationInformation = new cybersourceRestApi.Ptsv2paymentsConsumerAuthenticationInformation();
+    consumerAuthenticationInformation.ReferenceId = 'samTest1234';
+    consumerAuthenticationInformation.transactionMode = 'S';
   
     var request = new cybersourceRestApi.CreatePaymentRequest();
     request.clientReferenceInformation = clientReferenceInformation;
     request.processingInformation = processingInformation;
-    request.aggregatorInformation = aggregatorInformation;
     request.orderInformation = orderInformation;
     request.paymentInformation = paymentInformation;
+    request.consumerAuthenticationInformation.ReferenceId;
+    request.consumerAuthenticationInformation.transactionMode;
+
   
   
     console.log('\n*************** Process Payment ********************* ');
@@ -86,6 +76,17 @@ router.post('/', (req, res) => {
       }
       else if (data) {
         console.log('\nData of process a payment : ' + JSON.stringify(data));
+        Cardinal.continue('cca',
+        {
+            "AcsUrl":data.acsUrl,
+            "Payload":data.pareq
+        },
+        {
+            "OrderDetails":{
+                "TransactionId" :"123456abc"
+                // Add the rest of the Order object
+            }
+        });
         res.send(data)
       }
       console.log('\nResponse of process a payment : ' + JSON.stringify(response));
@@ -102,6 +103,8 @@ router.post('/', (req, res) => {
   }
   
 });
+
+
 
 
 

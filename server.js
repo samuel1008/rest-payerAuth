@@ -23,7 +23,7 @@ app.set('view engine', 'ejs');
 //routes
 app.get('/', (req, res) => {
   
-  res.render('index');
+  
 
   const randomID = uuidv4();
   const date = new Date().getTime() / 1000;
@@ -37,6 +37,7 @@ app.get('/', (req, res) => {
     "iat": date,
     "iss": apiIdentifier,
     "OrgUnitId": OrgUnitId,
+    "ReferenceId": "samTest1234",
     "Payload": {
         "OrderDetails": {
             "OrderNumber": "0e5c5bf2-ea64-42e8-9ee1-71fff6522e15",
@@ -55,15 +56,13 @@ app.get('/', (req, res) => {
     if (err) {
       console.log(err)
     } else {
-      console.log('token: ' + token)
-      const decoded = jwt.verify(encodedJWT, "success");
-
-      console.log('decoded =' + decoded);
-      return decoded
+      console.log(token)
+      res.render('index', {token: token}); 
       
     }
-
   });
+
+  console.log("encodedJWT = " + encodedJWT);
 
 
 });
