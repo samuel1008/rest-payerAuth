@@ -18,25 +18,27 @@
             }
         });
 
-        Cardinal.on("payments.validated", function (data, jwt) {
-            switch(data.ActionCode){
-                case "SUCCESS":
-            // Handle successful transaction, send JWT to backend to verify
-            break;
+        // Cardinal.on("payments.validated", function (data, jwt) {
+        //     switch(data.ActionCode){
+        //         case "SUCCESS":
+        //     // Handle successful transaction, send JWT to backend to verify
+        //     break;
      
-            case "NOACTION":
-            // Handle no actionable outcome
-            break;
+        //     case "NOACTION":
+        //     // Handle no actionable outcome
+        //     break;
             
-            case "FAILURE":
-            // Handle failed transaction attempt
-            break;
+        //     case "FAILURE":
+        //     // Handle failed transaction attempt
+        //     break;
             
-            case "ERROR":
-            // Handle service level error
-            break;
-        }
-        });
+        //     case "ERROR":
+        //     // Handle service level error
+        //     break;
+        // }
+        // });
+
+      
 
         Cardinal.setup("init", {
             jwt: document.getElementById("JWTContainer").value

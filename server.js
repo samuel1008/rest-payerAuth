@@ -31,23 +31,26 @@ app.get('/', (req, res) => {
   const apiIdentifier = process.env.API_IDENTIFIER
   const secretKey = process.env.API_KEY
 
+  const endDate = Math.floor(Date.now() / 1000) + (60 * 60);
+
+
   const payload = {
 
     "jti": randomID,
     "iat": date,
     "iss": apiIdentifier,
     "OrgUnitId": OrgUnitId,
-    "ReferenceId": "samTest1234",
+    "ReferenceId": "",
     "Payload": {
         "OrderDetails": {
-            "OrderNumber": "0e5c5bf2-ea64-42e8-9ee1-71fff6522e15",
-            "Amount": "1500",
+            "OrderNumber": "0e5c5bf2-ea64-42e8-9ee1-71fff6522e18",
+            "Amount": "10000",
             "CurrencyCode": "840"
         }
     },
     "ObjectifyPayload": true,
+    "exp": endDate,
     "ReferenceId": "c88b20c0-5047-11e6-8c35-8789b865ff15",
-    "exp": 1449001465,
     "ConfirmUrl": 'https://mywebsite.com/confirmHandler'
 
   }
@@ -57,14 +60,36 @@ app.get('/', (req, res) => {
       console.log(err)
     } else {
       console.log(token)
-      res.render('index', {token: token}); 
-      
+      // res.render('index', {token: token}); 
+      // return toke
+
+      jwt.verify(token, secretKey, (err, decoded) => {
+
+        if (err) {
+          console.log(err)
+        } else {
+          
+          res.render('index', {token: token});
+        }
+        
+      });
+
+      console.log("decoded = " + token);
     }
   });
 
+  // const decodedJWT = jwt.verify(payload, secretKey, (err, decoded) => {
+
+  //   if (err) {
+  //     console.log(err)
+  //   } else {
+      
+  //     console.log("decoded = " + decoded)
+  //     return decoded
+  //   }
+    
+  // });
   console.log("encodedJWT = " + encodedJWT);
-
-
 });
 
 app.use('/payment', paymentRoutes);
