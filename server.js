@@ -40,7 +40,6 @@ app.get('/', (req, res) => {
     "iat": date,
     "iss": apiIdentifier,
     "OrgUnitId": OrgUnitId,
-    "ReferenceId": "",
     "Payload": {
         "OrderDetails": {
             "OrderNumber": "0e5c5bf2-ea64-42e8-9ee1-71fff6522e18",
@@ -50,46 +49,41 @@ app.get('/', (req, res) => {
     },
     "ObjectifyPayload": true,
     "exp": endDate,
-    "ReferenceId": "c88b20c0-5047-11e6-8c35-8789b865ff15",
-    "ConfirmUrl": 'https://mywebsite.com/confirmHandler'
-
+    "ReferenceId": "c88b20c0-5047-11e6-8c35-8789b865ff15"
   }
 
-  const encodedJWT = jwt.sign(payload, secretKey, (err, token) => {
-    if (err) {
-      console.log(err)
-    } else {
-      console.log(token)
-      // res.render('index', {token: token}); 
-      // return toke
+  const encodedJWT = jwt.sign(payload, secretKey);
+  
+  console.log("encoded = " + encodedJWT.toString());
+  res.render('index', {token: encodedJWT.toString()});
 
-      jwt.verify(token, secretKey, (err, decoded) => {
+  var djwt = jwt.decode(encodedJWT, {complete: true} )
 
-        if (err) {
-          console.log(err)
-        } else {
-          
-          res.render('index', {token: token});
-        }
-        
-      });
-
-      console.log("decoded = " + token);
-    }
-  });
-
-  // const decodedJWT = jwt.verify(payload, secretKey, (err, decoded) => {
-
-  //   if (err) {
-  //     console.log(err)
-  //   } else {
-      
-  //     console.log("decoded = " + decoded)
-  //     return decoded
-  //   }
+  console.log("signature = " + djwt.signature)
+;
     
-  // });
-  console.log("encodedJWT = " + encodedJWT);
+    
+
+
+    const decodedJWT = (encodedJWT) => {
+        
+        const token = encodedJWT;
+
+        jwt.verify(token, secretKey, (err, decoded) => {
+
+          if (err) {
+            console.log(err)
+          } else {
+            
+            console.log(decoded);
+          }
+          
+        })
+        
+    };
+
+    decodedJWT(encodedJWT);
+
 });
 
 app.use('/payment', paymentRoutes);

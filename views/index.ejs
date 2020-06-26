@@ -18,31 +18,45 @@
             }
         });
 
-        // Cardinal.on("payments.validated", function (data, jwt) {
-        //     switch(data.ActionCode){
-        //         case "SUCCESS":
-        //     // Handle successful transaction, send JWT to backend to verify
-        //     break;
-     
-        //     case "NOACTION":
-        //     // Handle no actionable outcome
-        //     break;
-            
-        //     case "FAILURE":
-        //     // Handle failed transaction attempt
-        //     break;
-            
-        //     case "ERROR":
-        //     // Handle service level error
-        //     break;
-        // }
-        // });
+        
 
-      
+//         Cardinal.on("payments.validated", function (data, jwt) {
+//     switch(data.ActionCode){
+//       case "SUCCESS":
+//       // Handle successful transaction, send JWT to backend to verify
+//       break;
+     
+//       case "NOACTION":
+//       // Handle no actionable outcome
+//       break;
+     
+//       case "FAILURE":
+//       // Handle failed transaction attempt
+//       break;
+     
+//       case "ERROR":
+//       // Handle service level error
+//       break;
+//   }
+// });
+
+
 
         Cardinal.setup("init", {
-            jwt: document.getElementById("JWTContainer").value
-        });
+            jwt: document.getElementById("JWTContainer").value,
+            order: {
+				 Consumer: {
+					 AccountNumber: "4000000000001091"
+				 }
+			 }
+            });
+
+            Cardinal.on('payments.setupComplete', function(setupCompleteData){
+            console.log("sessionID = " + setupCompleteData.sessionId);
+    // Do something
+});
+
+  
 
     };
   </script>
@@ -50,7 +64,7 @@
 </head>
 <body>
 
-  <input type="hidden" id="JWTContainer" value=<%= token %> />
+  <input type="hidden" id="JWTContainer" value="<%= token %>" />
   <div class="container wrapper">
     <div class="panel panel-info">
         <div class="panel-heading">
@@ -68,7 +82,7 @@
                 </div>
                 <div class="form-group">
                     <label for="cardNumber">Card number</label>
-                    <input type="text" data-cardinal-field="AccountNumber" class="form-control" id="creditCardNumber" name="creditCardNumber" maxlength="19"/>
+                    <input type="text" class="form-control" id="creditCardNumber" name="creditCardNumber" maxlength="19"/>
                 </div>
                 <div class="form-group">
                     <label for="cvn">Security code</label>
